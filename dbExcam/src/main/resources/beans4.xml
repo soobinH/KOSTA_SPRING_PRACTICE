@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="outputter" class="com.example.di.sample4.FileOutputter">
+		<property name="filePath">
+		
+			<value>인사.txt</value>
+		</property> <!-- fileoutputter의 멤버변수(이게 속성임) -->
+	</bean>
+	
+	<bean id="messageBean" class="com.example.di.sample4.MessageBeanImpl">
+		<constructor-arg index="0">
+			<value>스프링</value>
+		</constructor-arg>
+		<property name="greeting">
+			<value>안녕</value>
+		</property>
+		
+		<property name="outputter"> <!-- 이건 첫 번째 bean 태그에 있는 id 값 -->
+			<ref bean="outputter"/> <!-- 이건 첫 번째 bean 태그에 있는 id 값 -->
+		</property>
+	</bean>
+</beans>

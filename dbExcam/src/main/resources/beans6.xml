@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+<bean id="department" class = "com.example.di.sample6.Department">
+	<property name="loc">
+		<value>여의도</value>
+	</property>
+	<property name="name">
+		<value>영업부</value>
+	</property>
+</bean>
+
+<bean id="employee" class="com.example.di.sample6.EmployeeImpl">
+	<constructor-arg index="0"><value>1001</value></constructor-arg>
+	<constructor-arg index="1"><value>홍길동</value></constructor-arg>
+	<constructor-arg index="2" ref="department"></constructor-arg>
+</bean>
+
+</beans>

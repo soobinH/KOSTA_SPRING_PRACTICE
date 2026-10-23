@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kosta.board.dao.ArticleDao">
+	<insert id="insertArticle" parameterType="article"
+		useGeneratedKeys="true" keyProperty="num">
+		insert into article
+		(title,content,writer,image_filename,download_filename)
+		values(#{title},#{content},#{writer},#{imageFilename},#{downloadFilename})
+	</insert>
+
+	<select id="selectArticle" parameterType="Integer"
+		resultType="article">
+		select * from article where num=#{num}
+	</select>
+
+
+	<select id="selectArticleWithMember" parameterType="Integer"
+		resultType="map">
+
+		SELECT
+		a.num,
+		a.title,
+		a.content,
+		a.writer,
+		a.viewcnt,
+		a.image_filename AS imageFilename,
+		a.download_filename AS downloadFilename,
+		m.name AS writerName,
+		m.profile AS profile
+
+		FROM article a
+		LEFT JOIN member m
+		ON a.writer = m.id
+
+		WHERE a.num = #{num}
+
+	</select>
+
+
+	<update id="updateArticle" parameterType="article">
+		update article
+		set title=#{title},
+		content=#{content}
+		<if test="imageFilename != null and imageFilename != ''">
+			, image_filename=#{imageFilename}
+		</if>
+		<if test="downloadFilename != null and downloadFilename != ''">
+			, download_filename=#{downloadFilename}
+		</if>
+		where num=#{num}
+	</update>
+
+	<select id="selectArticleList" parameterType="Integer"
+		resultType="article">
+		select * from article order by num desc limit #{row},10
+	</select>
+
+	<select id="selectArticleCnt" resultType="Integer"
+		parameterType="Map">
+		select count(*) from article
+	</select>
+
+	<select id="selectArticleWithMemberList" resultType="Map">
+		select a.num, a.title, a.content, a.writer, a.image_filename as
+		imageFilename, a.viewcnt,
+		a.download_filename as downloadFilename,
+		m.profile, m.name as writerName
+		from article a
+		left join member m
+		on(a.writer=m.id)
+		<if test="keyword!=null and keyword!=''">
+			<choose>
+				<when test="type=='all'">
+					where writer like '%${keyword}%' or
+					title like
+					'%${keyword}%' or
+					content like '%${keyword}%'
+				</when>
+				<otherwise>
+					where ${type} like '%${keyword}%'
+				</otherwise>
+			</choose>
+		</if>
+		order by num desc limit #{row},10
+	</select>
+
+
+	<select id="selectArticleWithMemberCnt" resultType="Integer">
+		select count(*)
+		from article a left join member m on(a.writer=m.id)
+		<if test="keyword!=null and keyword!=''">
+			<choose>
+				<when test="type=='all'">
+					where name like '%${keyword}%' or
+					title like
+					'%${keyword}%' or
+					content like '%${keyword}%'
+				</when>
+				<otherwise>
+					where ${type} like '%${keyword}%'
+				</otherwise>
+			</choose>
+		</if>
+	</select>
+
+	<update id="updateArticleViewCnt" parameterType="Integer">
+		update article
+		set viewcnt=viewcnt+1 where num=#{num}
+	</update>
+
+	<delete id="deleteArticle" parameterType="Integer">
+		delete from article
+		where num=#{num}
+	</delete>
+</mapper>	

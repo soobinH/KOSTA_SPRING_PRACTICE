@@ -1,0 +1,5 @@
+package com.kosta.bank.exc;
+
+public enum ERR_CODE {
+	ACCID,SENDACCID, RECVACCID, DOUBLEID, DEPOSIT, MENU,WITHDRAW, PASSWORD, NODATA
+}

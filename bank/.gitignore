@@ -1,0 +1,21 @@
+
+# Eclipse workspace
+.metadata/
+
+# Maven
+**/target/
+
+# Java build files
+**/bin/
+*.class
+
+# Gradle
+**/.gradle/
+**/build/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

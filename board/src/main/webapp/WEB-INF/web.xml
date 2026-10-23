@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+	version="4.0">
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/config/*.xml</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>iupload</param-name>
+		<param-value>c:/iupload</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>dupload</param-name>
+		<param-value>c:/dupload</param-value>
+	</context-param>
+
+
+	<!-- ContextLoaderListener : 웹 애플리케이션이 톰캣에 배포(시작)될 떄 가장 먼저 실행되는 리스너이다.. -->
+	<!-- contextConfigLocation : 리스너가 스프링 부모 컨테이너(Root WebApplicationContext)를 
+		띄울 때 읽어올 설정 파일 경로이다. -->
+	<!-- 역할 : /WEB-INF/spring/root-context.xml을 로드하여 DB 연동(DataSrource,Mybatis,JPA), 
+		비지니스로직(Service), 저장소(DAO) 등 공통 이프라 Bean을 메모리에 생성. -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+
+	<!-- DispatcherServlet : Spring MVC의 핵심 진입점으로, 클라이언트로부터 들어오는 모든 HPPT 요청을 
+		가로채서 적절한 Controller로 배분한다. -->
+	<!-- init-param : 서블릿 전용 자식 컨텍스트(Servlet WebApplication)을 띄울 때 잠조할 파일 경로(WEB-INF/spring/appServlet/servlet-context.xml) 
+		지정. Controller, ViewResolver 등이 등록된다. -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+
+		<!-- 톰캣이 켜질 때 첫 요청을 기다리지 않고 즉시 서블릿을 메모리에 초기화하도록 설정합니다. (초기 접속 지연 방지) -->
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<!-- 웹 애플리케이션으로 인입되는 기본 요청을 appServlet이 도맡아 처리하도록 매핑합니다. -->
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+</web-app>
